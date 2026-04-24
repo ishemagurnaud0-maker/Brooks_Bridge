@@ -22,8 +22,9 @@ model User{
   email String @unique
   password String
   imgUrl String?
-  companyId String
-  company Company @relation(fields: [companyId], references: [id])
+  companyId String?
+  isVerified  Boolean  @default(false)
+  company Company? @relation(fields: [companyId], references: [id])            
   createdAt DateTime @default(now())
 }
 
@@ -37,8 +38,8 @@ model Company{
   user User[]
   employee Employee[]
   companyPhone String
-  companyEmail String
-  departments Int
+  companyEmail String @unique
+  departments Department[]
   createdAt DateTime @default(now())
 }
  
@@ -51,9 +52,12 @@ model Employee{
   password String
   phoneNumber String
   salary Float?
+  pendingEmail String?
   payroll Payroll[]
   companyId String
   company Company @relation(fields: [companyId], references: [id])
+  departmentId String?
+  department Department? @relation(fields: [departmentId], references: [id])
   createdAt DateTime @default(now())
 }
 
@@ -63,10 +67,18 @@ model Payroll{
   id String @id @default(cuid())
   employeeId String
   employee Employee @relation(fields: [employeeId], references: [id])
-  amount Float?
+  amount Float
   currency String?
   paymentDate DateTime 
   createdAt DateTime @default(now())
 }
 
 
+model Department{
+  id String @id @default(cuid())
+  name String
+  employees Employee[]
+  companyId String
+  company Company @relation(fields: [companyId], references: [id])
+  createdAt DateTime @default(now())
+}
