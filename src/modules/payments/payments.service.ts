@@ -91,7 +91,7 @@ async handleWebhook(signature:string,rawBody:Buffer){
     return this.paymentsWebhook.handleWebhook(signature,rawBody);
 }
 
-async getEmployeeHistory(companyId:string,employeeId) {
+async getEmployeeHistory(companyId:string,employeeId:string) {
     const employee = await this.prisma.employee.findUnique({
         where:{id:employeeId}
     });
