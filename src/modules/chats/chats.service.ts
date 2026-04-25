@@ -27,7 +27,7 @@ export class ChatsService {
 
     //getall channels
 
-    async getLLChannels(companyId:string){
+    async getAllChannels(companyId:string){
         const channels = this.prisma.channel.findMany({
             where:{companyId},
             include:{
