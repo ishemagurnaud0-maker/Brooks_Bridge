@@ -8,6 +8,8 @@ import { CacheModule } from '@nestjs/cache-manager';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { DepartmentsModule } from './modules/departments/departments.module';
 import { UsersModule } from './modules/users/users.module'
+import { ChatsModule } from './modules/chats/chats.module';
+import { MeetingsModule } from './modules/meetings/meetings.module';
 
 @Module({
   imports: [
@@ -19,7 +21,9 @@ import { UsersModule } from './modules/users/users.module'
     PrismaModule,
     AuthModule,
     DepartmentsModule,
-    UsersModule
+    UsersModule,
+    ChatsModule,
+    MeetingsModule
   ],
 
   providers:[{
