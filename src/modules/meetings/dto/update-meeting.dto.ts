@@ -2,18 +2,21 @@ import { IsString,IsDateString,IsOptional } from 'class-validator'
 
 
 export class CreateMeetingDto{
+    @IsOptional()
     @IsString()
-    title:string;
-
-    @IsString()
-    link:string;
-
-    @IsDateString()
-    scheduledDate:string;
+    title?:string;
 
     @IsOptional()
     @IsString()
-    departmentId:string;
+    link?:string;
+
+    @IsOptional()
+    @IsDateString()
+    scheduledDate?:string;
+
+    @IsOptional()
+    @IsString()
+    departmentId?:string;
 
 
 }
