@@ -112,3 +112,19 @@ model Meeting {
   company  Company  @relation(fields: [companyId], references: [id])
   createdAt DateTime @default(now())
 }
+
+model Notification {
+  id String @id @default(cuid())
+  userId String
+  message String
+  type NotificationType
+  isRead Boolean @default(false)
+  createAt DateTime @default(now())
+}
+
+enum NotificationType {
+  MEETING
+  MESSAGE
+  PAYMENT
+  GENERAL
+}
