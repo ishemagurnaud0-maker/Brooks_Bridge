@@ -3,12 +3,12 @@ import { CreateMeetingDto } from './dto/create-meeting.dto';
 import { UpdateMeetingDto } from './dto/update-meeting.dto';
 import { PrismaService } from '../../prisma/prisma.service'
 import { ChatsService } from '../chats/chats.service'
-import { scheduled } from 'rxjs';
+import { NotificationsService } from '../notifications/notifications.service'
 
 @Injectable()
 export class MeetingsService {
   
-    constructor(private prisma:PrismaService,private chatsService:ChatsService ){}
+    constructor(private prisma:PrismaService,private chatsService:ChatsService, private notificationsService:NotificationsService){}
 
     //--create meeting--
 
@@ -32,6 +32,12 @@ export class MeetingsService {
                 companyId
             }
         });
+
+        await this.notificationsService.notifyCompany(
+            companyId,
+            `New meeting scheduled: ${dto.title} at/on ${dto.scheduledDate} `,
+            'MEETING'
+        )
 
         const channels = await this.chatsService.getAllChannels(companyId);
 
