@@ -1,13 +1,15 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import Stripe from 'stripe';
+import { NotificationsService } from 'src/modules/notifications/notifications.service';
+
 
 
 @Injectable()
 export class PaymentWebhook{
     private stripe: Stripe;
 
-    constructor(private prisma:PrismaService){
+    constructor(private prisma:PrismaService,private notificationService:NotificationsService){
         const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
         if (!stripeSecretKey) {
             throw new Error('STRIPE_SECRET_KEY environment variable is not defined');
@@ -56,7 +58,7 @@ export class PaymentWebhook{
 
 
     private async onPaymentSuccess(PaymentIntent:Stripe.PaymentIntent){
-        const { payrollId } = PaymentIntent.metadata;
+        const { payrollId,employeeId } = PaymentIntent.metadata;
 
         await this.prisma.payroll.update({
             where:{id:payrollId},
@@ -65,16 +67,28 @@ export class PaymentWebhook{
             }
         });
 
+        await this.notificationService.createNotification({
+            userId:employeeId,
+            message:'Your salary has been processed successfully.',
+            type:'PAYMENT'
+        });
+
         console.log(`Payment succeeded for payroll: ${payrollId}`)
     }
 
 
 private async onPaymentFailed(PaymentIntent:Stripe.PaymentIntent){
-    const { payrollId } = PaymentIntent.metadata;
+    const { payrollId,employeeId } = PaymentIntent.metadata;
 
     await this.prisma.payroll.update({
         where:{id:payrollId},
         data:{status: 'Payment failed.'}
+    });
+
+    await this.notificationService.createNotification({
+        userId:employeeId,
+            message:'Your salary has failed to be processed.Please contact your manager.',
+            type:'PAYMENT'
     });
 
     console.log(`Payment failed for payroll: ${payrollId}`);
