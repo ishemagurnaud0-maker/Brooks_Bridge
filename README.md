@@ -1,98 +1,348 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+# BrooksBridge API
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+A powerful **Payroll & Employee Management SaaS** backend built with NestJS, PostgreSQL, and Prisma.
 
-## Description
+---
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Tech Stack
 
-## Project setup
+| Technology | Purpose |
+|---|---|
+| NestJS | Backend framework |
+| PostgreSQL | Database |
+| Prisma | ORM |
+| JWT | Authentication |
+| Passport.js | Auth strategies |
+| bcrypt | Password hashing |
+| Nodemailer | Email (OTP) |
+| cache-manager | OTP caching |
+| Stripe | Payment processing |
+| Socket.IO | Real time chat & notifications |
+| ngrok | Local webhook testing |
 
-```bash
-$ npm install
+---
+
+## Project Structure
+
+```
+src/
+├── common/
+│   ├── decorators/
+│   │   ├── current-user.decorator.ts
+│   │   └── public.decorator.ts
+│   ├── guards/
+│   │   └── jwt-auth.guard.ts
+│   ├── filters/
+│   │   └── http-exception.filter.ts
+│   └── interceptors/
+│       └── response.interceptor.ts
+├── prisma/
+│   ├── prisma.service.ts
+│   └── prisma.module.ts
+├── modules/
+│   ├── auth/
+│   ├── users/
+│   ├── departments/
+│   ├── employees/
+│   ├── payments/
+│   ├── chat/
+│   ├── meetings/
+│   └── notifications/
+├── app.module.ts
+└── main.ts
 ```
 
-## Compile and run the project
+---
+
+## Prerequisites
+
+- Node.js v18+
+- PostgreSQL
+- Redis (optional)
+- Stripe account
+- Gmail account (for OTP)
+- ngrok (for local webhook testing)
+
+---
+
+## Getting Started
+
+### 1. Clone the repository
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+git clone https://github.com/your-username/brooks-bridge-api.git
+cd brooks-bridge-api
 ```
 
-## Run tests
+### 2. Install dependencies
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm install
 ```
 
-## Deployment
+### 3. Set up environment variables
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+
+
+
+### 4. Set up the database
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+# Create database in PostgreSQL
+psql -U postgres
+CREATE DATABASE brooksbridge;
+CREATE USER myuser WITH ENCRYPTED PASSWORD 'mypassword';
+GRANT ALL PRIVILEGES ON DATABASE brooksbridge TO myuser;
+\q
+
+# Run migrations
+npx prisma migrate dev
+npx prisma generate
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### 5. Start the server
 
-## Resources
+```bash
+# Development
+npm run start:dev
 
-Check out a few resources that may come in handy when working with NestJS:
+# Production
+npm run build
+npm run start:prod
+```
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+Server runs on `http://localhost:3000/api`
 
-## Support
+---
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## Database Schema
 
-## Stay in touch
+```prisma
+User          → Owner of a company
+Company       → Organization
+Employee      → Staff member of a company
+Department    → Division within a company
+Payroll       → Salary payment record
+Channel       → Chat channel
+Message       → Chat message
+Meeting       → Scheduled meeting
+Notification  → Real time notification
+```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+---
+
+## API Endpoints
+
+### Auth
+```
+POST /api/auth/register/owner    → Register owner (sends OTP)
+POST /api/auth/verify-otp        → Verify OTP
+POST /api/auth/register/company  → Complete company registration
+POST /api/auth/resend-otp        → Resend OTP
+POST /api/auth/login             → Login
+```
+
+### Users
+```
+GET    /api/users/me             → Get my profile
+PATCH  /api/users/me             → Update my profile
+PATCH  /api/users/me/password    → Change password
+DELETE /api/users/me             → Delete account
+```
+
+### Departments
+```
+POST   /api/departments          → Create department
+GET    /api/departments          → Get all departments
+GET    /api/departments/:id      → Get one department
+PATCH  /api/departments/:id      → Update department
+DELETE /api/departments/:id      → Delete department
+```
+
+### Employees
+```
+POST   /api/employees                  → Create employee
+GET    /api/employees                  → Get all employees
+GET    /api/employees/:id              → Get one employee
+PATCH  /api/employees/:id              → Update employee
+PATCH  /api/employees/:id/email        → Request email update (sends OTP)
+POST   /api/employees/:id/verify-email → Verify email OTP
+DELETE /api/employees/:id              → Delete employee
+```
+
+### Payments
+```
+POST   /api/payments/salary              → Pay employee salary
+GET    /api/payments/history             → Get all payment history
+GET    /api/payments/history/:employeeId → Get employee payment history
+POST   /api/payments/webhook             → Stripe webhook (public)
+```
+
+### Chat
+```
+POST   /api/chat/channels                      → Create channel
+GET    /api/chat/channels                      → Get all channels
+GET    /api/chat/channels/:channelId/messages  → Get channel messages
+```
+
+### Meetings
+```
+POST   /api/meetings       → Create meeting
+GET    /api/meetings       → Get all meetings
+GET    /api/meetings/:id   → Get one meeting
+PATCH  /api/meetings/:id   → Update meeting
+DELETE /api/meetings/:id   → Delete meeting
+```
+
+### Notifications
+```
+GET    /api/notifications           → Get my notifications
+PATCH  /api/notifications/:id/read  → Mark one as read
+PATCH  /api/notifications/read-all  → Mark all as read
+```
+
+---
+
+## Authentication
+
+All routes are protected by JWT except:
+- `POST /api/auth/register/owner`
+- `POST /api/auth/verify-otp`
+- `POST /api/auth/resend-otp`
+- `POST /api/auth/login`
+- `POST /api/payments/webhook`
+
+Include JWT token in all protected requests:
+```
+Authorization: Bearer <your_jwt_token>
+```
+
+---
+
+## Registration Flow
+
+```
+Step 1 → POST /auth/register/owner
+         { name, phoneNumber, email, password }
+         ↓ OTP sent to email
+
+Step 2 → POST /auth/verify-otp
+         { email, otp }
+         ↓ returns tempToken (1 hour expiry)
+
+Step 3 → POST /auth/register/company
+         Authorization: Bearer <tempToken>
+         { companyName, companyPhone, companyEmail }
+         ↓ returns fullToken (7 days expiry)
+```
+
+---
+
+## WebSocket Events
+
+### Chat Namespace: `/chat`
+
+| Client Emits | Server Emits | Description |
+|---|---|---|
+| `authenticate` | `authenticated` | Authenticate user |
+| `joinChannel` | `joinedChannel` | Join a chat channel |
+| `leaveChannel` | `leftChannel` | Leave a chat channel |
+| `sendMessage` | `newMessage` | Send a message |
+
+### Notifications Namespace: `/notifications`
+
+| Client Emits | Server Emits | Description |
+|---|---|---|
+| `authenticate` | `authenticated` | Authenticate user |
+| — | `notification` | Receive real time notification |
+
+---
+
+## Payment Flow
+
+```
+1. Company triggers salary payment
+         ↓
+2. Payroll record created (PENDING)
+         ↓
+3. Stripe PaymentIntent created (PROCESSING)
+         ↓
+4. Stripe processes payment
+         ↓
+5. Webhook received
+         ↓
+6. Payroll status updated (PAID or FAILED)
+         ↓
+7. Employee notified in real time
+```
+
+---
+
+## Notification Triggers
+
+| Event | Type | Recipients |
+|---|---|---|
+| Salary paid | PAYROLL | Employee |
+| Salary failed | PAYROLL | Employee |
+| New meeting | MEETING | All company users |
+| New employee | EMPLOYEE | All company users |
+
+---
+
+## Response Format
+
+### Success
+```json
+{
+  "success": true,
+  "data": {}
+}
+```
+
+### Error
+```json
+{
+  "success": false,
+  "statusCode": 400,
+  "message": "Error message here",
+  "path": "/api/endpoint",
+  "timestamp": "2026-01-01T00:00:00.000Z"
+}
+```
+
+---
+
+## Environment Variables Reference
+
+| Variable | Description | Required |
+|---|---|---|
+| `DATABASE_URL` | PostgreSQL connection string | ✅ |
+| `JWT_SECRET` | Secret key for JWT signing | ✅ |
+| `JWT_EXPIRES_IN` | JWT expiry duration | ✅ |
+| `EMAIL_USER` | Gmail address for sending OTP | ✅ |
+| `EMAIL_PASS` | Gmail app password | ✅ |
+| `EMAIL_FROM` | Email sender name and address | ✅ |
+| `STRIPE_SECRET_KEY` | Stripe secret key | ✅ |
+| `STRIPE_WEBHOOK_SECRET` | Stripe webhook signing secret | ✅ |
+| `PORT` | Server port (default: 3000) | ❌ |
+
+---
+
+## Scripts
+
+```bash
+npm run start:dev    # Start in watch mode
+npm run start:prod   # Start in production
+npm run build        # Build the project
+npm run lint         # Lint the code
+npm run test         # Run unit tests
+npm run test:e2e     # Run e2e tests
+```
+
+---
 
 ## License
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+MIT
